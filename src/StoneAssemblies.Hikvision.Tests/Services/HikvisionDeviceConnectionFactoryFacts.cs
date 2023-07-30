@@ -8,6 +8,7 @@ using FluentAssertions;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using StoneAssemblies.Hikvision.Extensions;
 using StoneAssemblies.Hikvision.Services;
 using StoneAssemblies.Hikvision.Services.Interfaces;
 
@@ -19,12 +20,12 @@ public class HikvisionDeviceConnectionFactoryFacts
     {
 
         [Fact]
-        [Trait(Traits.Category, TestCategory.Integration)]
-        public void Succeeds_When_Typed_Client_Are_Registered_DI_Container()
+        [Trait(Traits.Category, TestCategory.Unit)]
+        public void Activation_Succeeds()
         {
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddScoped<IHikvisionDeviceConnectionFactory, HikvisionDeviceConnectionFactory>();
-            serviceCollection.AddHttpClient<IHikvisionDeviceConnection>(
+            serviceCollection.AddHikvision();
+            serviceCollection.AddHttpClient(
                     "local",
                     httpClient =>
                         {

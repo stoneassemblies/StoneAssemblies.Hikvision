@@ -124,6 +124,7 @@ Task("Test")
         {
           NoWorkingDirectory = true,
           Configuration = buildConfiguration,
+          Filter = "Category=\"Unit\"",
           ArgumentCustomization = args => args
             .Append("/p:CollectCoverage=true")
             .Append("/p:CoverletOutputFormat=opencover")
