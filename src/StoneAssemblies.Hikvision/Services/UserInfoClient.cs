@@ -49,4 +49,9 @@ public class UserInfoClient : IUserInfoClient
     {
         await this.httpClient.PutAsync(EndPoints.Json.UserInfoModify, userInfo);
     }
+
+    public async Task AddUserAsync(UserInfo userInfo)
+    {
+        await this.httpClient.PostAsync(EndPoints.Json.UserInfoRecord, userInfo);
+    }
 }

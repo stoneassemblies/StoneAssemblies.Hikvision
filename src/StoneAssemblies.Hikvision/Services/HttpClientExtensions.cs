@@ -75,4 +75,23 @@ public static class HttpClientExtensions
         // TODO: Check this later.
         return JsonConvert.DeserializeObject<ResponseStatus> (responseContentString, JsonSerializerSettings);
     }
+
+    public static async Task<ResponseStatus> PostAsync<TRequest>(this HttpClient httpClient, string requestUri, TRequest request)
+    {
+        var content = new HikvisionJsonContent<TRequest>
+        {
+            Content = request
+        };
+
+        var serializeObject = JsonConvert.SerializeObject(content, JsonSerializerSettings);
+        var stringContent = new StringContent(serializeObject, Encoding.UTF8, MediaTypeNames.Application.Json);
+
+        var httpResponseMessage = await httpClient.PostAsync(requestUri, stringContent);
+        httpResponseMessage.EnsureSuccessStatusCode();
+
+        var responseContentString = await httpResponseMessage.Content.ReadAsStringAsync();
+
+        // TODO: Check this later.
+        return JsonConvert.DeserializeObject<ResponseStatus> (responseContentString, JsonSerializerSettings);
+    }
 }
