@@ -45,7 +45,7 @@ public class AcsEventsClient : IAcsEventsClient
                     yield return eventInfo;
                 }
 
-                request.SearchResultPosition += request.MaxResults;
+                request.SearchResultPosition += acsEvent.InfoList.Count;
                 acsEvent = await httpClient.PostAsync<AcsEventCond, AcsEvent>(EndPoints.Json.AcsEvent, request);
             }
         }
@@ -54,5 +54,4 @@ public class AcsEventsClient : IAcsEventsClient
             this.searchIdGenerationService.Release(request.SearchID);
         }
     }
-
 }

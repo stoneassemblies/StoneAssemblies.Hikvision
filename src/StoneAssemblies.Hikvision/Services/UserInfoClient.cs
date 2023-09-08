@@ -35,7 +35,7 @@ public class UserInfoClient : IUserInfoClient
                     yield return userInfo;
                 }
 
-                request.SearchResultPosition += request.MaxResults;
+                request.SearchResultPosition += userInfoSearch.UserInfo.Count;
                 userInfoSearch = await this.httpClient.PostAsync<UserInfoSearchCond, UserInfoSearch>(EndPoints.Json.UserInfoSearch, request);
             }
         }
