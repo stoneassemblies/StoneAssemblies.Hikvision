@@ -4,5 +4,5 @@ namespace StoneAssemblies.Hikvision.Services.Interfaces;
 
 public interface IAcsEventsClient : IHikvisionServiceClient
 {
-    IAsyncEnumerable<AcsEventInfo> ListAcsEventsAsync(DateTime startTime, DateTime endTime, int accessControlEventType, int eventMinorType, int bufferSize = 100);
+    IAsyncEnumerable<AcsEventInfo> ListAcsEventsAsync(DateTime startTime, DateTime endTime, int accessControlEventType, int eventMinorType);
 }

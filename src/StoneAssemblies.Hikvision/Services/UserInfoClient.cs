@@ -15,13 +15,13 @@ public class UserInfoClient : IUserInfoClient
         this.searchIdGenerationService = searchIdGenerationService;
     }
 
-    public async IAsyncEnumerable<UserInfo> ListUserAsync(int bufferSize = 100)
+    public async IAsyncEnumerable<UserInfo> ListUserAsync()
     {
         var request = new UserInfoSearchCond
         {
             SearchID = this.searchIdGenerationService.Next(),
             SearchResultPosition = 0,
-            MaxResults = bufferSize,
+            MaxResults = 10,
         };
 
         try
@@ -35,7 +35,7 @@ public class UserInfoClient : IUserInfoClient
                     yield return userInfo;
                 }
 
-                request.SearchResultPosition += bufferSize;
+                request.SearchResultPosition += request.MaxResults;
                 userInfoSearch = await this.httpClient.PostAsync<UserInfoSearchCond, UserInfoSearch>(EndPoints.Json.UserInfoSearch, request);
             }
         }

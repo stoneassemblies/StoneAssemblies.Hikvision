@@ -15,7 +15,7 @@ public class AcsEventsClient : IAcsEventsClient
         this.searchIdGenerationService = searchIdGenerationService;
     }
 
-    public async IAsyncEnumerable<AcsEventInfo> ListAcsEventsAsync(DateTime startTime, DateTime endTime, int accessControlEventType, int eventMinorType, int bufferSize = 100)
+    public async IAsyncEnumerable<AcsEventInfo> ListAcsEventsAsync(DateTime startTime, DateTime endTime, int accessControlEventType, int eventMinorType)
     {
         // Fix time.
         startTime = DateTime.SpecifyKind(startTime, DateTimeKind.Unspecified);
@@ -32,7 +32,7 @@ public class AcsEventsClient : IAcsEventsClient
             Major = accessControlEventType,
             Minor = eventMinorType,
             SearchResultPosition = 0,
-            MaxResults = bufferSize,
+            MaxResults = 10,
         };
 
         try
@@ -45,7 +45,7 @@ public class AcsEventsClient : IAcsEventsClient
                     yield return eventInfo;
                 }
 
-                request.SearchResultPosition += bufferSize;
+                request.SearchResultPosition += request.MaxResults;
                 acsEvent = await httpClient.PostAsync<AcsEventCond, AcsEvent>(EndPoints.Json.AcsEvent, request);
             }
         }
