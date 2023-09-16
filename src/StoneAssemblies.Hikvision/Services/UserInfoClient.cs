@@ -1,57 +1,72 @@
-﻿namespace StoneAssemblies.Hikvision.Services;
-
-using StoneAssemblies.Hikvision.Models;
-using StoneAssemblies.Hikvision.Services.Interfaces;
-
-public class UserInfoClient : IUserInfoClient
+﻿namespace StoneAssemblies.Hikvision.Services
 {
-    private readonly HttpClient httpClient;
+    using StoneAssemblies.Hikvision.Models;
+    using StoneAssemblies.Hikvision.Services.Interfaces;
 
-    private readonly ISearchIdGenerationService searchIdGenerationService;
-
-    public UserInfoClient(HttpClient httpClient, ISearchIdGenerationService searchIdGenerationService)
+    public class UserInfoClient : IUserInfoClient
     {
-        this.httpClient = httpClient;
-        this.searchIdGenerationService = searchIdGenerationService;
-    }
+        private readonly HttpClient httpClient;
 
-    public async IAsyncEnumerable<UserInfo> ListUserAsync()
-    {
-        var request = new UserInfoSearchCond
+        private readonly ISearchIdGenerationService searchIdGenerationService;
+
+        public UserInfoClient(HttpClient httpClient, ISearchIdGenerationService searchIdGenerationService)
         {
-            SearchID = this.searchIdGenerationService.Next(),
-            SearchResultPosition = 0,
-            MaxResults = 10,
-        };
+            this.httpClient = httpClient;
+            this.searchIdGenerationService = searchIdGenerationService;
+        }
 
-        try
+        public async IAsyncEnumerable<UserInfo> ListUserAsync(params string[] employeeNumbers)
         {
-            var userInfoSearch = await this.httpClient.PostAsync<UserInfoSearchCond, UserInfoSearch>(EndPoints.Json.UserInfoSearch, request);
+            var searchCond = new UserInfoSearchCond();
 
-            while (userInfoSearch?.UserInfo is not null)
+            if (employeeNumbers.Length > 0)
             {
-                foreach (var userInfo in userInfoSearch.UserInfo)
-                {
-                    yield return userInfo;
-                }
+                searchCond.EmployeeNoList = employeeNumbers
+                    .Select(employeeNumber => new EmployeeNoListItem { EmployeeNo = employeeNumber }).ToList();
+            }
 
-                request.SearchResultPosition += userInfoSearch.UserInfo.Count;
-                userInfoSearch = await this.httpClient.PostAsync<UserInfoSearchCond, UserInfoSearch>(EndPoints.Json.UserInfoSearch, request);
+            await foreach (var userInfo in this.SearchUserAsync(searchCond))
+            {
+                yield return userInfo;
             }
         }
-        finally
+
+        public async Task UpdateUserAsync(UserInfo userInfo)
         {
-            this.searchIdGenerationService.Release(request.SearchID);
+            await this.httpClient.PutAsync(EndPoints.Json.UserInfoModify, userInfo);
         }
-    }
 
-    public async Task UpdateUserAsync(UserInfo userInfo)
-    {
-        await this.httpClient.PutAsync(EndPoints.Json.UserInfoModify, userInfo);
-    }
+        public async Task AddUserAsync(UserInfo userInfo)
+        {
+            await this.httpClient.PostAsync(EndPoints.Json.UserInfoRecord, userInfo);
+        }
 
-    public async Task AddUserAsync(UserInfo userInfo)
-    {
-        await this.httpClient.PostAsync(EndPoints.Json.UserInfoRecord, userInfo);
+        private async IAsyncEnumerable<UserInfo> SearchUserAsync(UserInfoSearchCond searchCond)
+        {
+            ArgumentNullException.ThrowIfNull(searchCond);
+
+            searchCond.SearchID = this.searchIdGenerationService.Next();
+            searchCond.SearchResultPosition = 0;
+            searchCond.MaxResults = 10;
+
+            try
+            {
+                var userInfoSearch = await this.httpClient.PostAsync<UserInfoSearchCond, UserInfoSearch>(EndPoints.Json.UserInfoSearch, searchCond);
+                while (userInfoSearch?.UserInfo is not null)
+                {
+                    foreach (var userInfo in userInfoSearch.UserInfo)
+                    {
+                        yield return userInfo;
+                    }
+
+                    searchCond.SearchResultPosition += userInfoSearch.UserInfo.Count;
+                    userInfoSearch = await this.httpClient.PostAsync<UserInfoSearchCond, UserInfoSearch>(EndPoints.Json.UserInfoSearch, searchCond);
+                }
+            }
+            finally
+            {
+                this.searchIdGenerationService.Release(searchCond.SearchID);
+            }
+        }
     }
 }

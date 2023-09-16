@@ -6,7 +6,7 @@ public interface IUserInfoClient : IHikvisionServiceClient
 {
     Task AddUserAsync(UserInfo userInfo);
 
-    IAsyncEnumerable<UserInfo> ListUserAsync();
+    IAsyncEnumerable<UserInfo> ListUserAsync(params string[] employeeNumbers);
 
     Task UpdateUserAsync(UserInfo userInfo);
 }
