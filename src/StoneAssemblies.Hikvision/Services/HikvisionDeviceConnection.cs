@@ -61,13 +61,13 @@
         {
             if (this.serviceProvider is not null)
             {
-                return (THikvisionServiceClient) ActivatorUtilities.CreateInstance(
+                return (THikvisionServiceClient)ActivatorUtilities.CreateInstance(
                     this.serviceProvider,
                     this.hikvisionServiceClientMappingProvider.GetClientType<THikvisionServiceClient>(),
                     this.httpClient);
             }
 
-            return (THikvisionServiceClient) Activator.CreateInstance(this.hikvisionServiceClientMappingProvider.GetClientType<THikvisionServiceClient>(), this.httpClient)!;
+            return (THikvisionServiceClient)Activator.CreateInstance(this.hikvisionServiceClientMappingProvider.GetClientType<THikvisionServiceClient>(), this.httpClient)!;
         }
     }
 }

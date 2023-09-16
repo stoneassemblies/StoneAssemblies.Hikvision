@@ -32,7 +32,7 @@ public class SearchIdGenerationService : ISearchIdGenerationService
 
         return result;
     }
-    
+
     public void Release(string data)
     {
         this.results.Remove(data);

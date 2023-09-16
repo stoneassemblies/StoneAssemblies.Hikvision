@@ -1,13 +1,14 @@
 ﻿namespace StoneAssemblies.Hikvision.Tests.Services;
 
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.DependencyInjection;
 
 using StoneAssemblies.Hikvision.Extensions;
-using StoneAssemblies.Hikvision.Models;
 using StoneAssemblies.Hikvision.Services;
 using StoneAssemblies.Hikvision.Services.Interfaces;
 
@@ -52,19 +53,22 @@ public class UserInfoClientFacts
                 Environment.Device.Password);
 
             var userInfoClient = deviceConnection.GetClient<IUserInfoClient>();
-            await foreach (var userInfo in userInfoClient.ListUserAsync())
-            {
-                userInfo.PersonInfoExtends = new List<PersonInfoExtend>()
-                                                 {
-                                                     new PersonInfoExtend
-                                                         {
-                                                             Name = "data",
-                                                             Value = "1"
-                                                         }
-                                                 };
 
-                await userInfoClient.UpdateUserAsync(userInfo);
+            var regex = new Regex("([^,]+),\"([^\"]+)");
+
+            var template = await userInfoClient.ListUserAsync().FirstAsync();
+            var strings = await File.ReadAllLinesAsync("c:\\Tmp\\employees.csv");
+            foreach (var s in strings)
+            {
+                var match = regex.Match(s);
+                var id = match.Groups[1].Value;
+                var name = match.Groups[2].Value;
+                template.EmployeeNo = id;
+                template.Name = name;
+
+                await userInfoClient.AddUserAsync(template);
             }
+
         }
     }
 

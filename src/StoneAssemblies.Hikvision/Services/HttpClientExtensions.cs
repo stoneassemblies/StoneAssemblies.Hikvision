@@ -73,7 +73,7 @@ public static class HttpClientExtensions
         var responseContentString = await httpResponseMessage.Content.ReadAsStringAsync();
 
         // TODO: Check this later.
-        return JsonConvert.DeserializeObject<ResponseStatus> (responseContentString, JsonSerializerSettings);
+        return JsonConvert.DeserializeObject<ResponseStatus>(responseContentString, JsonSerializerSettings);
     }
 
     public static async Task<ResponseStatus> PostAsync<TRequest>(this HttpClient httpClient, string requestUri, TRequest request)
@@ -92,6 +92,6 @@ public static class HttpClientExtensions
         var responseContentString = await httpResponseMessage.Content.ReadAsStringAsync();
 
         // TODO: Check this later.
-        return JsonConvert.DeserializeObject<ResponseStatus> (responseContentString, JsonSerializerSettings);
+        return JsonConvert.DeserializeObject<ResponseStatus>(responseContentString, JsonSerializerSettings);
     }
 }

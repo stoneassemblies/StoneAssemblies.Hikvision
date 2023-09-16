@@ -36,11 +36,11 @@ public class SystemClient : ISystemClient
         var value = document.Root.Element(IsapiXml.Time.LocalTime)!.Value;
         var dateTimeOffset = DateTimeOffset.Parse(value);
         return new Time
-                   {
-                       TimeMode = document.Root!.Element(IsapiXml.Time.TimeMode)!.Value,
-                       LocalTime = dateTimeOffset.DateTime,
-                       TimeZone = document.Root.Element(IsapiXml.Time.TimeZone)!.Value
-                   };
+        {
+            TimeMode = document.Root!.Element(IsapiXml.Time.TimeMode)!.Value,
+            LocalTime = dateTimeOffset.DateTime,
+            TimeZone = document.Root.Element(IsapiXml.Time.TimeZone)!.Value
+        };
     }
 
     public async Task SetTimeAsync(Time time, bool syncTimeZone = true)

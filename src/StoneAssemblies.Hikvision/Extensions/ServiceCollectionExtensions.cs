@@ -34,7 +34,7 @@
 
                 serviceCollection.Add(serviceDescriptor);
                 registeredService.Add(serviceDescriptor.ServiceType);
-                
+
                 clientTypeMappings[serviceDescriptor.ServiceType] = serviceDescriptor.ImplementationType;
             }
 
