@@ -1,8 +1,9 @@
-﻿namespace StoneAssemblies.Hikvision.Models;
-
-public class RightPlan
+﻿namespace StoneAssemblies.Hikvision.Models
 {
-    public int DoorNo { get; set; }
+    public class RightPlan
+    {
+        public int DoorNo { get; set; }
 
-    public string PlanTemplateNo { get; set; }
+        public string PlanTemplateNo { get; set; }
+    }
 }

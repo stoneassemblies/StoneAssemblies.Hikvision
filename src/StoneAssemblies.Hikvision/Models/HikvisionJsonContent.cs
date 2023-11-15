@@ -1,6 +1,7 @@
-﻿namespace StoneAssemblies.Hikvision.Models;
-
-public class HikvisionJsonContent<TContent>
+﻿namespace StoneAssemblies.Hikvision.Models
 {
-    public TContent? Content { get; set; }
+    public class HikvisionJsonContent<TContent>
+    {
+        public TContent? Content { get; set; }
+    }
 }
