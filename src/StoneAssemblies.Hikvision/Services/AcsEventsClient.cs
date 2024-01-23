@@ -15,12 +15,7 @@
             this.searchIdGenerationService = searchIdGenerationService;
         }
 
-        public IAsyncEnumerable<AcsEventInfo> ListEventsAsync(DateTime startTime, DateTime endTime, EventTypes eventType)
-        {
-            return this.ListAcsEventsAsync(startTime, endTime, AccessControlEventTypes.Event, (int)eventType);
-        }
-
-        public async IAsyncEnumerable<AcsEventInfo> ListAcsEventsAsync(DateTime startTime, DateTime endTime, AccessControlEventTypes accessControlEventType, int eventMinorType)
+        public async IAsyncEnumerable<AcsEventInfo> ListAcsEventsAsync<TMinorEventType>(DateTime startTime, DateTime endTime, AccessControlEventTypes accessControlEventType, TMinorEventType minorEventType)  where TMinorEventType : Enum
         {
             // Fix time.
             startTime = DateTime.SpecifyKind(startTime, DateTimeKind.Unspecified);
@@ -34,8 +29,8 @@
                 SearchID = this.searchIdGenerationService.Next(),
                 StartTime = startTimeOffset.ToString(TimeFormats.TimeFormat),
                 EndTime = endTimeOffset.ToString(TimeFormats.TimeFormat),
-                Major = (int)accessControlEventType,
-                Minor = eventMinorType,
+                Major = Convert.ToInt32(accessControlEventType),
+                Minor = Convert.ToInt32(minorEventType),
                 SearchResultPosition = 0,
                 MaxResults = 10,
             };

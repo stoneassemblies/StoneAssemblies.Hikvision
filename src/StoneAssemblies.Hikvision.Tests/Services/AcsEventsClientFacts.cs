@@ -35,7 +35,7 @@ public class AcsEventsClientFacts
             var startTime = new DateTime(2023, 7, 30, 18, 50, 0);
             var endTime = DateTime.Now;
 
-            var acsEvents = await acsEventsClient.ListEventsAsync(startTime, endTime, EventTypes.FingerprintComparePass).ToListAsync();
+            var acsEvents = await acsEventsClient.ListAcsEventsAsync(startTime, endTime, AccessControlEventTypes.Event, EventTypes.FingerprintComparePass).ToListAsync();
             Assert.NotEmpty(acsEvents);
         }
     }
