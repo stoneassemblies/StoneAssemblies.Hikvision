@@ -25,11 +25,13 @@ public class HikvisionDeviceConnectionFactory : IHikvisionDeviceConnectionFactor
     /// </param>
     public HikvisionDeviceConnectionFactory(IServiceProvider serviceProvider)
     {
+        ArgumentNullException.ThrowIfNull(serviceProvider);
+
         this.serviceProvider = serviceProvider;
     }
 
     ///// <summary>
-    ///// The create.
+    ///// Creates a device connection.
     ///// </summary>
     ///// <param name="url">
     ///// The url.
@@ -45,9 +47,15 @@ public class HikvisionDeviceConnectionFactory : IHikvisionDeviceConnectionFactor
     ///// </returns>
     public IHikvisionDeviceConnection Create(string url, string username, string password)
     {
-        var httpMessageHandler = new HttpClientHandler { Credentials = new NetworkCredential(username, password) };
+        var httpMessageHandler = new HttpClientHandler
+        {
+            Credentials = new NetworkCredential(username, password)
+        };
 
-        var httpClient = new HttpClient(httpMessageHandler) { BaseAddress = new Uri(url) };
+        var httpClient = new HttpClient(httpMessageHandler)
+        {
+            BaseAddress = new Uri(url)
+        };
 
         return ActivatorUtilities.CreateInstance<HikvisionDeviceConnection>(this.serviceProvider, httpClient); ;
     }
@@ -66,11 +74,6 @@ public class HikvisionDeviceConnectionFactory : IHikvisionDeviceConnectionFactor
     /// </exception>
     public IHikvisionDeviceConnection Create(string name)
     {
-        if (this.serviceProvider is null)
-        {
-            throw new NotSupportedException();
-        }
-
         var httpClientFactory = this.serviceProvider.GetRequiredService<IHttpClientFactory>();
         var httpClient = httpClientFactory.CreateClient(name);
 

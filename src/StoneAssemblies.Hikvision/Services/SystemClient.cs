@@ -24,6 +24,8 @@ public class SystemClient : ISystemClient
 
     public SystemClient(HttpClient httpClient)
     {
+        ArgumentNullException.ThrowIfNull(httpClient);
+
         this.httpClient = httpClient;
     }
 

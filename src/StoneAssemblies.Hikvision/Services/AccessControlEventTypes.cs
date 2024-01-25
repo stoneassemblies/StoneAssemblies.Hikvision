@@ -1,12 +1,13 @@
-﻿namespace StoneAssemblies.Hikvision.Services;
-
-public enum AccessControlEventTypes
+﻿namespace StoneAssemblies.Hikvision.Services
 {
-    Alarm = 0x1,
+    public enum AccessControlEventTypes
+    {
+        Alarm = 0x1,
 
-    Exception = 0x2,
+        Exception = 0x2,
 
-    Operation = 0x3,
+        Operation = 0x3,
 
-    Event = 0x5
+        Event = 0x5
+    }
 }

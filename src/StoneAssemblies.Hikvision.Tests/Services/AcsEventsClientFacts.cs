@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using StoneAssemblies.Hikvision.Extensions;
 using StoneAssemblies.Hikvision.Services;
+using StoneAssemblies.Hikvision.Services.Extensions;
 using StoneAssemblies.Hikvision.Services.Interfaces;
 
 using Xunit;
@@ -35,7 +36,7 @@ public class AcsEventsClientFacts
             var startTime = new DateTime(2023, 7, 30, 18, 50, 0);
             var endTime = DateTime.Now;
 
-            var acsEvents = await acsEventsClient.ListAcsEventsAsync(startTime, endTime, AccessControlEventTypes.Event, EventTypes.FingerprintComparePass).ToListAsync();
+            var acsEvents = await acsEventsClient.ListAcsEventsAsync(startTime, endTime, AccessControlEventTypes.Event, EventTypes.FingerprintComparePass, EventTypes.FaceVerifyPass).ToListAsync();
             Assert.NotEmpty(acsEvents);
         }
     }

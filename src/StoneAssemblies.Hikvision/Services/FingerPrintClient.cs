@@ -12,6 +12,9 @@ public class FingerPrintClient : IFingerPrintClient
 
     public FingerPrintClient(HttpClient httpClient, ISearchIdGenerationService searchIdGenerationService)
     {
+        ArgumentNullException.ThrowIfNull(httpClient);
+        ArgumentNullException.ThrowIfNull(searchIdGenerationService);
+
         this.httpClient = httpClient;
         this.searchIdGenerationService = searchIdGenerationService;
     }

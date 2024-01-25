@@ -42,6 +42,10 @@
             IServiceProvider serviceProvider, HttpClient httpClient,
             IHikvisionServiceClientMappingProvider hikvisionServiceClientMappingProvider)
         {
+            ArgumentNullException.ThrowIfNull(serviceProvider);
+            ArgumentNullException.ThrowIfNull(httpClient);
+            ArgumentNullException.ThrowIfNull(hikvisionServiceClientMappingProvider);
+
             this.httpClient = httpClient;
             this.serviceProvider = serviceProvider;
             this.hikvisionServiceClientMappingProvider = hikvisionServiceClientMappingProvider;
@@ -59,15 +63,10 @@
         public THikvisionServiceClient GetClient<THikvisionServiceClient>()
             where THikvisionServiceClient : IHikvisionServiceClient
         {
-            if (this.serviceProvider is not null)
-            {
-                return (THikvisionServiceClient)ActivatorUtilities.CreateInstance(
-                    this.serviceProvider,
-                    this.hikvisionServiceClientMappingProvider.GetClientType<THikvisionServiceClient>(),
-                    this.httpClient);
-            }
-
-            return (THikvisionServiceClient)Activator.CreateInstance(this.hikvisionServiceClientMappingProvider.GetClientType<THikvisionServiceClient>(), this.httpClient)!;
+            return (THikvisionServiceClient)ActivatorUtilities.CreateInstance(
+                this.serviceProvider,
+                this.hikvisionServiceClientMappingProvider.GetClientType<THikvisionServiceClient>(),
+                this.httpClient);
         }
     }
 }

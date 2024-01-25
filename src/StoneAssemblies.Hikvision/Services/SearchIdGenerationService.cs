@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace StoneAssemblies.Hikvision.Extensions;
+namespace StoneAssemblies.Hikvision.Services;
 
 using StoneAssemblies.Hikvision.Collections;
 using StoneAssemblies.Hikvision.Services.Interfaces;
@@ -16,7 +16,7 @@ public class SearchIdGenerationService : ISearchIdGenerationService
         var builder = new StringBuilder();
         while (builder.Length < digits)
         {
-            builder.Append(this.random.Next(10).ToString());
+            builder.Append(random.Next(10).ToString());
         }
 
         return builder.ToString();
@@ -24,10 +24,10 @@ public class SearchIdGenerationService : ISearchIdGenerationService
 
     public string Next()
     {
-        var result = this.CreateRandomString(16);
-        while (!this.results.Add(result))
+        var result = CreateRandomString(16);
+        while (!results.Add(result))
         {
-            result = this.CreateRandomString(16);
+            result = CreateRandomString(16);
         }
 
         return result;
@@ -35,6 +35,6 @@ public class SearchIdGenerationService : ISearchIdGenerationService
 
     public void Release(string data)
     {
-        this.results.Remove(data);
+        results.Remove(data);
     }
 }

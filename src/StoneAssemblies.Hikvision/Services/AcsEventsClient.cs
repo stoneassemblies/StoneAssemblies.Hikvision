@@ -11,6 +11,9 @@
 
         public AcsEventsClient(HttpClient httpClient, ISearchIdGenerationService searchIdGenerationService)
         {
+            ArgumentNullException.ThrowIfNull(httpClient);
+            ArgumentNullException.ThrowIfNull(searchIdGenerationService);
+
             this.httpClient = httpClient;
             this.searchIdGenerationService = searchIdGenerationService;
         }
